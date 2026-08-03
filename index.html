@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Olga Lissete LLC — Commercial Cleaning &amp; Janitorial Services | Central Florida</title>
+<meta name="description" content="Commercial cleaning and janitorial crews for offices, schools, clinics and warehouses across Central Florida. Licensed, insured, serving businesses since 2015. Free walkthrough and estimate.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#12222C;
+  --ink-2:#1D3543;
+  --paper:#FFFFFF;
+  --mist:#EDF1F3;
+  --rule:#C6D1D7;
+  --signal:#F5C518;
+  --verify:#1B6B58;
+  --muted:#5C7080;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --display:"Chivo",var(--sans);
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --wrap:1160px;
+  --pad:clamp(20px,5vw,56px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16.5px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+.eyebrow{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 14px;
+}
+h2{
+  font-family:var(--display);font-weight:900;
+  font-size:clamp(28px,4.4vw,44px);line-height:1.06;
+  letter-spacing:-.022em;margin:0 0 16px;
+}
+h3{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.01em;margin:0 0 8px}
+p{margin:0 0 14px}
+
+/* ---------- utility bar ---------- */
+.util{background:var(--ink);color:#C9DCE6;font-family:var(--mono);font-size:12px}
+.util .wrap{display:flex;gap:22px;flex-wrap:wrap;align-items:center;padding-top:9px;padding-bottom:9px}
+.util a{text-decoration:none}
+.util a:hover{color:var(--signal)}
+.util .sep{margin-left:auto;color:#6E8896}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:1px solid var(--rule)}
+.nav .wrap{display:flex;align-items:center;gap:26px;padding-top:14px;padding-bottom:14px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto}
+.brand img{height:40px;width:auto}
+.brand b{font-family:var(--display);font-weight:900;font-size:17px;letter-spacing:-.02em;line-height:1.05}
+.brand span{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--muted);font-weight:400}
+.navlinks{display:flex;gap:24px;font-size:14px;font-weight:500}
+.navlinks a{text-decoration:none;padding:4px 0;border-bottom:2px solid transparent}
+.navlinks a:hover{border-bottom-color:var(--signal)}
+@media(max-width:860px){.navlinks{display:none}}
+
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--ink);color:#fff;text-decoration:none;
+  font-weight:600;font-size:14.5px;padding:12px 20px;border:2px solid var(--ink);
+  cursor:pointer;transition:background .15s,color .15s;
+}
+.btn:hover{background:var(--signal);color:var(--ink);border-color:var(--signal)}
+.btn-ghost{background:transparent;color:var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ---------- hero ---------- */
+.hero{border-bottom:1px solid var(--rule)}
+.hero .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:clamp(28px,5vw,64px);
+  padding-top:clamp(44px,6vw,76px);padding-bottom:0;align-items:end}
+.hero h1{
+  font-family:var(--display);font-weight:900;
+  font-size:clamp(38px,6.6vw,68px);line-height:.98;letter-spacing:-.035em;margin:0 0 20px;
+}
+.hero h1 mark{background:none;color:var(--ink);border-bottom:8px solid var(--signal);padding-bottom:1px}
+.hero .lede{font-size:18px;color:var(--ink-2);max-width:48ch;margin-bottom:26px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:30px}
+.heroshot{position:relative;background:var(--ink);min-height:260px;align-self:stretch}
+.heroshot img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.12) brightness(.92);mix-blend-mode:luminosity;opacity:.9}
+.heroshot::after{content:"";position:absolute;inset:0;background:linear-gradient(200deg,transparent 40%,rgba(18,34,44,.55))}
+.shot-tag{
+  position:absolute;left:0;bottom:0;z-index:2;background:var(--signal);color:var(--ink);
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  padding:8px 14px;
+}
+@media(max-width:820px){
+  .hero .wrap{grid-template-columns:1fr;padding-bottom:0}
+  .heroshot{min-height:200px;margin-left:calc(var(--pad)*-1);margin-right:calc(var(--pad)*-1)}
+}
+
+/* ---------- credential strip ---------- */
+.creds{background:var(--ink);color:#E4EEF3}
+.creds .wrap{display:flex;flex-wrap:wrap;gap:0;padding:0}
+.cred{
+  flex:1 1 auto;min-width:150px;padding:18px 22px;border-right:1px solid rgba(255,255,255,.13);
+}
+.cred:last-child{border-right:none}
+.cred b{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.13em;color:var(--signal);margin-bottom:3px}
+.cred span{font-size:14.5px;font-weight:500}
+
+/* ---------- sections ---------- */
+.sec{padding-top:clamp(56px,7vw,92px);padding-bottom:clamp(56px,7vw,92px)}
+.sec-mist{background:var(--mist);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.sec-head{max-width:62ch;margin-bottom:38px}
+
+/* ---------- services ---------- */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.svc{background:var(--paper);padding:0;display:flex;flex-direction:column}
+.svc figure{margin:0;background:var(--ink-2);aspect-ratio:16/10;overflow:hidden}
+.svc figure img{width:100%;height:100%;object-fit:cover;filter:grayscale(.85) contrast(1.06);transition:filter .35s,transform .5s}
+.svc:hover figure img{filter:grayscale(0) contrast(1);transform:scale(1.04)}
+.svc-body{padding:20px 22px 24px;flex:1}
+.svc-body ul{margin:10px 0 0;padding-left:17px;font-size:14.5px;color:var(--muted)}
+.svc-body li{margin-bottom:4px}
+.svc-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);display:block;margin-bottom:6px}
+
+/* ---------- SIGNATURE: scope sheet ---------- */
+.scope-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:26px}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border:2px solid var(--ink);margin-bottom:0}
+.tab{
+  font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--paper);color:var(--ink);border:none;border-right:1px solid var(--rule);
+  padding:12px 17px;cursor:pointer;font-weight:500;
+}
+.tab:last-child{border-right:none}
+.tab:hover{background:var(--mist)}
+.tab[aria-selected="true"]{background:var(--ink);color:#fff}
+
+.sheet{border:2px solid var(--ink);background:var(--paper);overflow-x:auto}
+.sheet table{width:100%;border-collapse:collapse;min-width:560px}
+.sheet caption{
+  caption-side:top;text-align:left;background:var(--ink);color:#fff;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+  padding:11px 16px;
+}
+.sheet th{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;text-align:center;padding:11px 6px;
+  border-bottom:2px solid var(--ink);white-space:nowrap;
+}
+.sheet th.task{text-align:left;padding-left:16px;width:56%}
+.sheet td{padding:9px 6px;text-align:center;border-bottom:1px solid var(--rule);font-size:14.5px}
+.sheet td.task{text-align:left;padding-left:16px;font-weight:500}
+.sheet tr:last-child td{border-bottom:none}
+.sheet tbody tr:hover td{background:#FAFCFD}
+.mk{
+  display:inline-block;width:19px;height:19px;background:var(--signal);
+  border:1.5px solid var(--ink);position:relative;
+}
+.mk::after{
+  content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;
+  border:solid var(--ink);border-width:0 2px 2px 0;transform:rotate(42deg);
+}
+.anim .mk{animation:pop .28s cubic-bezier(.2,1.5,.4,1) backwards}
+@keyframes pop{from{transform:scale(0) rotate(-18deg);opacity:0}to{transform:none;opacity:1}}
+.scope-foot{
+  display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  margin-top:18px;font-size:14px;color:var(--muted);
+}
+
+/* ---------- why ---------- */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:28px}
+.why-item{border-top:3px solid var(--ink);padding-top:16px}
+.why-item .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--verify);margin-bottom:7px}
+.why-item p{font-size:14.5px;color:var(--muted);margin:0}
+
+/* ---------- area ---------- */
+.area{display:grid;grid-template-columns:1fr 1.25fr;gap:clamp(28px,5vw,60px);align-items:start}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font-family:var(--mono);font-size:12.5px;padding:7px 12px;
+  background:var(--paper);border:1px solid var(--rule);
+}
+@media(max-width:760px){.area{grid-template-columns:1fr}}
+
+/* ---------- quote ---------- */
+.quote{background:var(--ink);color:#fff}
+.quote h2{color:#fff}
+.quote .eyebrow{color:var(--signal)}
+.quote-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(30px,5vw,64px);align-items:start}
+.quote p{color:#B9CCD6}
+.qcall{
+  display:block;font-family:var(--display);font-weight:900;font-size:clamp(26px,3.6vw,36px);
+  letter-spacing:-.02em;color:#fff;text-decoration:none;margin:8px 0 4px;
+}
+.qcall:hover{color:var(--signal)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+label{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:#9FB8C4}
+input,select,textarea{
+  font-family:var(--sans);font-size:15px;padding:11px 13px;
+  background:#1B3341;border:1px solid #35576A;color:#fff;border-radius:0;
+}
+input::placeholder,textarea::placeholder{color:#6D8B99}
+input:focus,select:focus,textarea:focus{border-color:var(--signal);outline:none}
+textarea{resize:vertical;min-height:82px}
+.quote .btn{background:var(--signal);color:var(--ink);border-color:var(--signal);width:100%;justify-content:center;margin-top:4px}
+.quote .btn:hover{background:#fff;border-color:#fff}
+.formnote{font-family:var(--mono);font-size:11.5px;color:#7E9AA8;margin-top:10px}
+@media(max-width:820px){.quote-grid{grid-template-columns:1fr}.fields{grid-template-columns:1fr}}
+
+/* ---------- footer ---------- */
+.foot{background:#0C1920;color:#8FA9B6;font-size:13.5px;padding:34px 0}
+.foot .wrap{display:flex;gap:20px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.foot a{color:#C9DCE6;text-decoration:none}
+.foot a:hover{color:var(--signal)}
+
+/* ---------- sticky mobile call ---------- */
+.mobile-call{display:none}
+@media(max-width:700px){
+  .mobile-call{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:80;
+  }
+  .mobile-call a{
+    flex:1;text-align:center;padding:15px 8px;text-decoration:none;font-weight:600;font-size:15px;
+  }
+  .mobile-call .c1{background:var(--ink);color:#fff}
+  .mobile-call .c2{background:var(--signal);color:var(--ink)}
+  body{padding-bottom:54px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+
+@media print{
+  .util,.nav,.hero,.creds,.svc-grid,.sec-head,.why-grid,.area,.quote,.foot,.mobile-call,.tabs,.scope-foot{display:none!important}
+  .sheet{border:1px solid #000}
+  body{font-size:11pt}
+}
+</style>
+</head>
+<body>
+
+<div class="util">
+  <div class="wrap">
+    <a href="tel:8136864731">813-686-4731</a>
+    <a href="mailto:olgalissetellc@gmail.com">olgalissetellc@gmail.com</a>
+    <span class="sep">Ruskin, FL · Serving all Central Florida</span>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img src="https://olgalissetellc.com/images/logos/logo.png" alt="Olga Lissete LLC">
+      <b>Olga Lissete LLC<span>Commercial cleaning · est. 2015</span></b>
+    </a>
+    <div class="navlinks">
+      <a href="#services">Services</a>
+      <a href="#scope">Scope of work</a>
+      <a href="#area">Service area</a>
+      <a href="#quote">Get an estimate</a>
+    </div>
+    <a class="btn" href="#quote">Request a walkthrough</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Offices · Schools · Clinics · Warehouses · Retail</p>
+      <h1>Cleaning crews that <mark>show up</mark>, on the schedule you signed.</h1>
+      <p class="lede">We handle nightly janitorial and periodic floor care for businesses across Central Florida. Same crew, written scope, one supervisor you can call by name.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#quote">Request a free walkthrough</a>
+        <a class="btn btn-ghost" href="tel:8136864731">Call 813-686-4731</a>
+      </div>
+    </div>
+    <div class="heroshot">
+      <img src="https://olgalissetellc.com/images/nuevas/commercial.jpg" alt="Commercial cleaning crew servicing an office facility">
+      <span class="shot-tag">Central Florida · since 2015</span>
+    </div>
+  </div>
+</header>
+
+<section class="creds">
+  <div class="wrap">
+    <div class="cred"><b>Insured</b><span>General liability &amp; workers' comp</span></div>
+    <div class="cred"><b>Experience</b><span>10+ years in commercial facilities</span></div>
+    <div class="cred"><b>Coverage</b><span>Single site or multi-location</span></div>
+    <div class="cred"><b>Estimates</b><span>Free walkthrough, no obligation</span></div>
+  </div>
+</section>
+
+<section class="sec" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">What we do</p>
+      <h2>Four service lines. Priced per square foot and frequency.</h2>
+      <p>Most clients start with nightly janitorial and add floor care quarterly. You can also book any line as a one-time job.</p>
+    </div>
+    <div class="svc-grid">
+
+      <article class="svc">
+        <figure><img src="https://olgalissetellc.com/images/nuevas/commercial.jpg" alt="Office cleaning"></figure>
+        <div class="svc-body">
+          <span class="svc-num">01</span>
+          <h3>Commercial cleaning</h3>
+          <ul>
+            <li>Offices, suites, common areas</li>
+            <li>Trash, vacuum, mop, restrooms</li>
+            <li>Nightly, 3×/week or weekly</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="svc">
+        <figure><img src="https://olgalissetellc.com/images/nuevas/janitorial-home.jpg" alt="Janitorial services"></figure>
+        <div class="svc-body">
+          <span class="svc-num">02</span>
+          <h3>Janitorial contracts</h3>
+          <ul>
+            <li>Schools, clinics, warehouses</li>
+            <li>Supply restocking included</li>
+            <li>Assigned supervisor &amp; checklist</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="svc">
+        <figure><img src="https://olgalissetellc.com/images/nuevas/choose.jpg" alt="Carpet and tile care"></figure>
+        <div class="svc-body">
+          <span class="svc-num">03</span>
+          <h3>Floor &amp; carpet care</h3>
+          <ul>
+            <li>Carpet steam extraction</li>
+            <li>Tile &amp; grout deep clean</li>
+            <li>Strip, wax, buff, upholstery</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="svc">
+        <figure><img src="https://olgalissetellc.com/images/nuevas/covid2.jpg" alt="Disinfection services"></figure>
+        <div class="svc-body">
+          <span class="svc-num">04</span>
+          <h3>Disinfection &amp; sanitation</h3>
+          <ul>
+            <li>High-touch point disinfection</li>
+            <li>Restroom &amp; break room sanitation</li>
+            <li>Post-construction &amp; move-out</li>
+          </ul>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- SIGNATURE ELEMENT -->
+<section class="sec sec-mist" id="scope">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Scope of work</p>
+      <h2>The sheet we tape inside your janitor's closet.</h2>
+      <p>Every contract comes with a written frequency schedule. Pick your facility type to see what a standard scope looks like before you ever call us.</p>
+    </div>
+
+    <div class="scope-head">
+      <div class="tabs" role="tablist" aria-label="Facility type">
+        <button class="tab" role="tab" aria-selected="true" data-key="office">Office</button>
+        <button class="tab" role="tab" aria-selected="false" data-key="school">School</button>
+        <button class="tab" role="tab" aria-selected="false" data-key="medical">Clinic</button>
+        <button class="tab" role="tab" aria-selected="false" data-key="warehouse">Warehouse</button>
+        <button class="tab" role="tab" aria-selected="false" data-key="retail">Retail</button>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <table>
+        <caption id="sheetCap">Standard scope — general office</caption>
+        <thead>
+          <tr>
+            <th class="task">Task</th>
+            <th>Daily</th><th>Weekly</th><th>Monthly</th><th>Quarterly</th>
+          </tr>
+        </thead>
+        <tbody id="sheetBody"></tbody>
+      </table>
+    </div>
+
+    <div class="scope-foot">
+      <span>Frequencies adjust after the walkthrough. Nothing here is billed until you approve it in writing.</span>
+      <a class="btn btn-ghost" href="#quote">Get this priced for my building</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Why facility managers stay</p>
+      <h2>Four things we do not negotiate on.</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="k">CONSISTENCY</div>
+        <h3>The same crew</h3>
+        <p>You get an assigned team and a named supervisor. No revolving door, no re-explaining your building every month.</p>
+      </div>
+      <div class="why-item">
+        <div class="k">SAFETY</div>
+        <h3>Approved products</h3>
+        <p>Industry-approved, low-odor products safe for staff, students and shared air systems.</p>
+      </div>
+      <div class="why-item">
+        <div class="k">ACCOUNTABILITY</div>
+        <h3>Satisfaction guarantee</h3>
+        <p>If something on the scope sheet gets missed, we return and correct it at no charge.</p>
+      </div>
+      <div class="why-item">
+        <div class="k">PRICING</div>
+        <h3>Free walkthrough</h3>
+        <p>We measure, ask questions and send a written quote. No obligation and no automatic renewals you didn't ask for.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-mist" id="area">
+  <div class="wrap area">
+    <div>
+      <p class="eyebrow">Service area</p>
+      <h2>Based in Ruskin. Working across Central Florida.</h2>
+      <p>Headquarters at 15530 Long Cypress Dr, Ruskin, FL 33573. National accounts handled by arrangement.</p>
+    </div>
+    <div>
+      <div class="chips">
+        <span class="chip">Tampa</span><span class="chip">Brandon</span><span class="chip">Riverview</span>
+        <span class="chip">Ruskin</span><span class="chip">Apollo Beach</span><span class="chip">Sun City Center</span>
+        <span class="chip">Wesley Chapel</span><span class="chip">Plant City</span><span class="chip">St. Petersburg</span>
+        <span class="chip">Clearwater</span><span class="chip">Lakeland</span><span class="chip">Sarasota</span>
+        <span class="chip">Orlando</span><span class="chip">Kissimmee</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec quote" id="quote">
+  <div class="wrap quote-grid">
+    <div>
+      <p class="eyebrow">Get an estimate</p>
+      <h2>Tell us about the building.</h2>
+      <p>We'll call within one business day to schedule a walkthrough. If it's urgent, call directly:</p>
+      <a class="qcall" href="tel:8136864731">813-686-4731</a>
+      <p>Mon–Fri, 8am–6pm ET</p>
+    </div>
+
+    <div>
+      <div class="fields">
+        <div class="field"><label for="f-name">Name</label><input id="f-name" placeholder="Full name"></div>
+        <div class="field"><label for="f-co">Company</label><input id="f-co" placeholder="Business name"></div>
+        <div class="field"><label for="f-phone">Phone</label><input id="f-phone" type="tel" placeholder="813-000-0000"></div>
+        <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" placeholder="you@company.com"></div>
+        <div class="field">
+          <label for="f-type">Facility type</label>
+          <select id="f-type">
+            <option>Office</option><option>School</option><option>Clinic / medical</option>
+            <option>Warehouse</option><option>Retail</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-loc">Locations</label>
+          <select id="f-loc"><option>1</option><option>2–5</option><option>6–20</option><option>20+</option></select>
+        </div>
+        <div class="field full"><label for="f-sqft">Approximate square footage &amp; cleaning nights per week</label><input id="f-sqft" placeholder="e.g. 8,000 sq ft, 5 nights"></div>
+        <div class="field full"><label for="f-msg">Anything else we should know</label><textarea id="f-msg" placeholder="Access hours, current vendor, problem areas..."></textarea></div>
+        <div class="field full">
+          <button class="btn" id="sendBtn" type="button">Send request</button>
+          <p class="formnote">Pilot version — this button opens your email app with the request pre-filled.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <div>
+      <strong style="color:#fff">Olga Lissete LLC</strong> — Commercial cleaning &amp; maintenance for businesses of all sizes. Serving Central Florida since 2015.
+    </div>
+    <div>
+      <a href="tel:8136864731">813-686-4731</a> ·
+      <a href="mailto:olgalissetellc@gmail.com">olgalissetellc@gmail.com</a> ·
+      <span>&copy; <span id="yr"></span> Olga Lissete LLC</span>
+    </div>
+  </div>
+</footer>
+
+<div class="mobile-call">
+  <a class="c1" href="tel:8136864731">Call now</a>
+  <a class="c2" href="#quote">Free estimate</a>
+</div>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+const SCOPES = {
+  office: { label: "general office", rows: [
+    ["Empty trash and replace liners","D"],
+    ["Vacuum carpeted areas and entry mats","D"],
+    ["Dust mop and damp mop hard floors","D"],
+    ["Clean, disinfect and restock restrooms","D"],
+    ["Sanitize break room counters and appliance fronts","D"],
+    ["Wipe high-touch points: handles, switches, rails","D"],
+    ["Dust desks, sills, partitions and ledges","W"],
+    ["Clean interior glass and entry doors","W"],
+    ["Detail baseboards, corners and edges","M"],
+    ["Machine scrub or burnish hard floors","M"],
+    ["Carpet steam extraction","Q"],
+    ["High dusting: vents, light fixtures, ceiling corners","Q"]
+  ]},
+  school: { label: "school / campus", rows: [
+    ["Classroom trash removal and desk wipe-down","D"],
+    ["Restroom cleaning, disinfection and restock (2×)","D"],
+    ["Cafeteria tables, floors and serving line","D"],
+    ["Sweep and mop corridors and stairwells","D"],
+    ["Disinfect door handles, rails and water fountains","D"],
+    ["Gym and multipurpose floor dust mop","D"],
+    ["Vacuum offices, library and carpeted rooms","W"],
+    ["Clean interior glass, entry doors and trophy cases","W"],
+    ["Locker exteriors and hallway baseboards","M"],
+    ["Scrub and re-coat hard floors","Q"],
+    ["Carpet extraction in offices and library","Q"],
+    ["High dusting and vent cleaning","Q"]
+  ]},
+  medical: { label: "clinic / medical office", rows: [
+    ["Exam room disinfection, hospital-grade product","D"],
+    ["Waiting room seating, tables and toys wipe-down","D"],
+    ["Restroom disinfection and restock","D"],
+    ["Regulated waste staging per your protocol","D"],
+    ["Mop all hard floors with disinfectant solution","D"],
+    ["Disinfect high-touch points and check-in counters","D"],
+    ["Vacuum carpeted offices and hallways","W"],
+    ["Interior glass, partitions and sneeze guards","W"],
+    ["Detail baseboards, chair bases and casework","M"],
+    ["Machine scrub hard floors","M"],
+    ["Carpet extraction and upholstery cleaning","Q"],
+    ["High dusting: vents, lights, ceiling grid","Q"]
+  ]},
+  warehouse: { label: "warehouse / distribution", rows: [
+    ["Trash removal from floor, dock and offices","D"],
+    ["Restroom cleaning, disinfection and restock","D"],
+    ["Break room tables, microwaves and floors","D"],
+    ["Sweep main aisles and pedestrian walkways","D"],
+    ["Disinfect handles, time clocks and rails","D"],
+    ["Office area vacuum and dusting","W"],
+    ["Ride-on scrub of warehouse floor","W"],
+    ["Dock area pressure rinse and edge detail","M"],
+    ["Locker room and shower deep clean","M"],
+    ["Racking and beam high dusting","Q"],
+    ["Office carpet extraction","Q"],
+    ["Overhead vent and fixture cleaning","Q"]
+  ]},
+  retail: { label: "retail / storefront", rows: [
+    ["Entry glass, doors and handles","D"],
+    ["Sales floor vacuum or dust mop and damp mop","D"],
+    ["Trash removal, front and stockroom","D"],
+    ["Restroom cleaning, disinfection and restock","D"],
+    ["Fitting rooms: mirrors, benches, floors","D"],
+    ["Counter, POS station and high-touch disinfection","D"],
+    ["Shelving and display fixture dusting","W"],
+    ["Stockroom sweep and organize floor space","W"],
+    ["Baseboards, corners and door frames detail","M"],
+    ["Machine scrub or burnish sales floor","M"],
+    ["Carpet extraction where applicable","Q"],
+    ["High dusting: signage, lights, vents","Q"]
+  ]}
+};
+
+const COLS = ["D","W","M","Q"];
+const body = document.getElementById('sheetBody');
+const cap  = document.getElementById('sheetCap');
+const sheet = document.querySelector('.sheet');
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function render(key){
+  const data = SCOPES[key];
+  cap.textContent = "Standard scope — " + data.label;
+  body.innerHTML = "";
+  data.rows.forEach((row, i) => {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.className = 'task';
+    td.textContent = row[0];
+    tr.appendChild(td);
+    COLS.forEach(c => {
+      const cell = document.createElement('td');
+      if (c === row[1]) {
+        const m = document.createElement('span');
+        m.className = 'mk';
+        if (!reduce) m.style.animationDelay = (i * 0.035) + 's';
+        cell.appendChild(m);
+      }
+      tr.appendChild(cell);
+    });
+    body.appendChild(tr);
+  });
+  if (!reduce) {
+    sheet.classList.remove('anim');
+    void sheet.offsetWidth;
+    sheet.classList.add('anim');
+  }
+}
+
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected','false'));
+    t.setAttribute('aria-selected','true');
+    render(t.dataset.key);
+  });
+});
+
+render('office');
+
+document.getElementById('sendBtn').addEventListener('click', () => {
+  const v = id => (document.getElementById(id).value || '—').trim();
+  const lines = [
+    "Name: " + v('f-name'),
+    "Company: " + v('f-co'),
+    "Phone: " + v('f-phone'),
+    "Email: " + v('f-email'),
+    "Facility type: " + v('f-type'),
+    "Locations: " + v('f-loc'),
+    "Size / nights: " + v('f-sqft'),
+    "",
+    "Notes: " + v('f-msg')
+  ].join("\n");
+  window.location.href = "mailto:olgalissetellc@gmail.com"
+    + "?subject=" + encodeURIComponent("Cleaning estimate request — " + v('f-co'))
+    + "&body=" + encodeURIComponent(lines);
+});
+</script>
+</body>
+</html>
