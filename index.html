@@ -109,21 +109,16 @@
       "@keyframes rrpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}"
       +"@keyframes rrflash{0%,100%{color:#ffd23f}50%{color:#ff2e63}}"
       +"#ol-gate .rr-marquee{white-space:nowrap;animation:rrscroll 12s linear infinite}"
-      +"@keyframes rrscroll{from{transform:translateX(40vw)}to{transform:translateX(-100%)}}";
+      +"@keyframes rrscroll{from{transform:translateX(40vw)}to{transform:translateX(-100%)}}"
+      +"#ol-gate #rr-player,#ol-gate #rr-player iframe{position:absolute;top:50%;left:50%;"
+      +"transform:translate(-50%,-50%);width:100vw;height:56.25vw;min-height:100vh;min-width:177.78vh;border:0;pointer-events:none}";
     document.head.appendChild(str);
 
-    // Full-bleed official video, autoplays muted (allowed), sound unlocks on first tap
+    // Full-bleed official video via the YouTube IFrame Player API (reliable playback + sound)
     var wrap = document.createElement("div");
     wrap.style.cssText = "position:absolute;inset:0;overflow:hidden;z-index:1;background:#050014";
-    var yt = document.createElement("iframe");
-    yt.id = "rr-yt";
-    yt.allow = "autoplay; encrypted-media";
-    yt.setAttribute("frameborder","0");
-    yt.src = "https://www.youtube.com/embed/"+VID+"?autoplay=1&mute=1&controls=0&loop=1&playlist="+VID
-           + "&modestbranding=1&playsinline=1&rel=0&disablekb=1&fs=0&iv_load_policy=3&enablejsapi=1";
-    yt.style.cssText = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"
-      + "width:100vw;height:56.25vw;min-height:100vh;min-width:177.78vh;border:0;pointer-events:none";
-    wrap.appendChild(yt);
+    var holder = document.createElement("div"); holder.id = "rr-player";
+    wrap.appendChild(holder);
 
     // Click/tap catcher over the video
     var catcher = document.createElement("div");
@@ -150,49 +145,69 @@
     gate.appendChild(catcher);
     gate.appendChild(msg);
 
-    var started = false, ytPlaying = false;
-    window.addEventListener("message", function(e){
-      if(typeof e.data === "string" && e.data.indexOf('"onStateChange"')>-1 && e.data.indexOf('"info":1')>-1) ytPlaying = true;
-    });
-    function ytCmd(func,args){ try{ yt.contentWindow.postMessage(JSON.stringify({event:"command",func:func,args:args||[]}),"*"); }catch(e){} }
+    var player = null, ytPlaying = false, started = false, synthStop = false, synthOn = false;
+
+    function makePlayer(){
+      try{
+        player = new YT.Player("rr-player", {
+          videoId: VID,
+          playerVars: {autoplay:1, mute:1, controls:0, loop:1, playlist:VID, playsinline:1, modestbranding:1, rel:0, fs:0, iv_load_policy:3, disablekb:1},
+          events: {
+            "onReady": function(e){ try{ e.target.mute(); e.target.playVideo(); }catch(_){}}
+            ,"onStateChange": function(e){
+                if(e.data===1){ ytPlaying = true; synthStop = true; }          // 1 = playing
+                else if(e.data===0){ try{ e.target.playVideo(); }catch(_){}}    // 0 = ended → loop
+              }
+          }
+        });
+      }catch(_){}
+    }
+    // Load the IFrame API once, then build the player
+    if(window.YT && window.YT.Player){ makePlayer(); }
+    else {
+      var prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = function(){ if(typeof prev==="function"){ try{ prev(); }catch(_){}} makePlayer(); };
+      if(!document.getElementById("rr-api")){ var tag=document.createElement("script"); tag.id="rr-api"; tag.src="https://www.youtube.com/iframe_api"; document.head.appendChild(tag); }
+    }
+
+    function isPlaying(){ try{ var s=player&&player.getPlayerState&&player.getPlayerState(); return s===1||s===3; }catch(_){ return false; } } // 1 playing, 3 buffering
+
+    // 8-bit fallback — plays ONLY if the real video truly never starts (e.g. YouTube blocked)
+    function beep(){
+      if(synthOn || synthStop) return; synthOn = true;
+      try{
+        var AC = window.AudioContext || window.webkitAudioContext; if(!AC) return;
+        var ctx = new AC();
+        var N = {C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392.0,A4:440.0,C5:523.25};
+        var seq = [["C4",1],["D4",1],["F4",1],["D4",1],["A4",2],["A4",2],["G4",3],["_",1],
+                   ["C4",1],["D4",1],["F4",1],["D4",1],["G4",2],["G4",2],["F4",1],["E4",1],["D4",3],["_",1]];
+        var tempo = 0.18;
+        (function loop(){
+          if(synthStop) return;
+          var t = ctx.currentTime + 0.06;
+          for(var i=0;i<seq.length;i++){
+            var f = N[seq[i][0]], dur = seq[i][1]*tempo;
+            if(f){ var o=ctx.createOscillator(), g=ctx.createGain(); o.type="square"; o.frequency.value=f;
+              g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.22,t+0.02);
+              g.gain.exponentialRampToValueAtTime(0.0001,t+dur*0.9);
+              o.connect(g).connect(ctx.destination); o.start(t); o.stop(t+dur); }
+            t += dur;
+          }
+          setTimeout(loop, (t-ctx.currentTime)*1000);
+        })();
+      }catch(_){}
+    }
 
     function go(){
       if(started) return; started = true;
       var h = document.getElementById("rr-hint"); if(h) h.style.display = "none";
-      ytCmd("unMute"); ytCmd("setVolume",[100]); ytCmd("playVideo");
-      setTimeout(function(){ if(!ytPlaying) synth(); }, 2500);  // guarantee sound if YT is blocked
+      try{ if(player && player.playVideo){ player.unMute(); player.setVolume(100); player.playVideo(); } }catch(_){}
+      // last resort: only beep if the real video clearly isn't playing after a grace period
+      setTimeout(function(){ if(!ytPlaying && !isPlaying()) beep(); }, 4500);
     }
     catcher.addEventListener("click", go);
     catcher.addEventListener("touchstart", go, {passive:true});
     window.addEventListener("keydown", go);
-    // some browsers allow un-muted autoplay after prior engagement — try immediately too
-    setTimeout(function(){ ytCmd("unMute"); ytCmd("playVideo"); }, 900);
-  }
-
-  // 8-bit fallback so there is ALWAYS sound, even if YouTube is blocked
-  function synth(){
-    try{
-      var AC = window.AudioContext || window.webkitAudioContext; if(!AC) return;
-      var ctx = new AC();
-      var N = {C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392.0,A4:440.0,Bb4:466.16,C5:523.25,D5:587.33};
-      // "never gonna give you up, never gonna let you down" hook (chiptune)
-      var seq = [["C4",1],["D4",1],["F4",1],["D4",1],["A4",2],["A4",2],["G4",3],["_",1],
-                 ["C4",1],["D4",1],["F4",1],["D4",1],["G4",2],["G4",2],["F4",1],["E4",1],["D4",3],["_",1]];
-      var tempo = 0.18;
-      function loop(){
-        var t = ctx.currentTime + 0.06;
-        for(var i=0;i<seq.length;i++){
-          var f = N[seq[i][0]], dur = seq[i][1]*tempo;
-          if(f){ var o=ctx.createOscillator(), g=ctx.createGain(); o.type="square"; o.frequency.value=f;
-            g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.22,t+0.02);
-            g.gain.exponentialRampToValueAtTime(0.0001,t+dur*0.9);
-            o.connect(g).connect(ctx.destination); o.start(t); o.stop(t+dur); }
-          t += dur;
-        }
-        setTimeout(loop, (t-ctx.currentTime)*1000);
-      }
-      loop();
-    }catch(e){}
   }
 })();
 </script>
