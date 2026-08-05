@@ -145,7 +145,10 @@
     gate.appendChild(catcher);
     gate.appendChild(msg);
 
-    var player = null, ytPlaying = false, started = false, synthStop = false, synthOn = false;
+    var player = null, wantSound = false, soundOK = false, started = false, synthStop = false, synthOn = false;
+
+    function muted(){ try{ return !!(player && player.isMuted && player.isMuted()); }catch(_){ return true; } }
+    function state(){ try{ return (player && player.getPlayerState) ? player.getPlayerState() : -1; }catch(_){ return -1; } }
 
     function makePlayer(){
       try{
@@ -155,8 +158,9 @@
           events: {
             "onReady": function(e){ try{ e.target.mute(); e.target.playVideo(); }catch(_){}}
             ,"onStateChange": function(e){
-                if(e.data===1){ ytPlaying = true; synthStop = true; }          // 1 = playing
-                else if(e.data===0){ try{ e.target.playVideo(); }catch(_){}}    // 0 = ended → loop
+                if(e.data===1){ if(wantSound && !muted()){ soundOK = true; synthStop = true; } }  // playing UNMUTED → real audio wins
+                else if(e.data===2){ if(wantSound){ try{ player.mute(); player.playVideo(); }catch(_){} } } // browser paused it on unmute → keep it moving
+                else if(e.data===0){ try{ e.target.playVideo(); }catch(_){} }  // ended → loop
               }
           }
         });
@@ -170,9 +174,7 @@
       if(!document.getElementById("rr-api")){ var tag=document.createElement("script"); tag.id="rr-api"; tag.src="https://www.youtube.com/iframe_api"; document.head.appendChild(tag); }
     }
 
-    function isPlaying(){ try{ var s=player&&player.getPlayerState&&player.getPlayerState(); return s===1||s===3; }catch(_){ return false; } } // 1 playing, 3 buffering
-
-    // 8-bit fallback — plays ONLY if the real video truly never starts (e.g. YouTube blocked)
+    // 8-bit "never gonna give you up" hook — guarantees sound if the browser blocks the video's own audio
     function beep(){
       if(synthOn || synthStop) return; synthOn = true;
       try{
@@ -201,9 +203,17 @@
     function go(){
       if(started) return; started = true;
       var h = document.getElementById("rr-hint"); if(h) h.style.display = "none";
-      try{ if(player && player.playVideo){ player.unMute(); player.setVolume(100); player.playVideo(); } }catch(_){}
-      // last resort: only beep if the real video clearly isn't playing after a grace period
-      setTimeout(function(){ if(!ytPlaying && !isPlaying()) beep(); }, 4500);
+      wantSound = true;
+      // Try the video's REAL audio (works on most desktops after this click)
+      try{ if(player){ player.unMute(); player.setVolume(100); player.playVideo(); } }catch(_){}
+      // If the browser refuses unmuted playback, keep the video ROLLING (muted) and blast the 8-bit track,
+      // so the visitor always sees the video AND hears music — never a frozen screen.
+      setTimeout(function(){
+        if(!(state()===1 && !muted())){
+          try{ if(state()!==1){ player.mute(); player.playVideo(); } }catch(_){}
+          beep();
+        }
+      }, 2200);
     }
     catcher.addEventListener("click", go);
     catcher.addEventListener("touchstart", go, {passive:true});
