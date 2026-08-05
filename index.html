@@ -10,30 +10,27 @@
 <meta name="description" content="Professional janitorial &amp; commercial cleaning for banks, offices, dental and medical facilities, retail and commercial buildings across Florida. Licensed, insured and dependable — the clean touch you can trust.">
 
 <!-- ============================================================
-     REMOTE KILL SWITCH  (admin on/off — controlled from a GitHub Gist)
+     REMOTE KILL SWITCH  (admin on/off — no redeploy of the live site)
      ------------------------------------------------------------
-     TURN THE SITE OFF/ON FROM ANOTHER WEBSITE, WITH NO REDEPLOY:
-       1) Create ONE public Gist at  https://gist.github.com  (logged in
-          as the GIST_USER below), with a file named exactly:
-                olga-status.json
-          and this content:      { "on": true }
-       2) That's it. To turn the site OFF later, just edit the Gist to
-                { "on": false }   → visitors see a full black screen
-          Set it back to { "on": true } to show the site again.
-          Changes take effect on the next page load — no deploy needed.
+     The switch is a file on the "switch" branch of this repo:
+         github.com/MashLanzer/OLGA-LISSETE-LLC  →  branch "switch"  →  status.json
+     TURN THE SITE OFF / ON (takes effect on the next page load):
+         { "on": false }  → visitors see a full black screen
+         { "on": true  }  → site shows normally
+     One-click edit link (bookmark it):
+         https://github.com/MashLanzer/OLGA-LISSETE-LLC/edit/switch/status.json
+     Because it lives on the "switch" branch (not main), editing it does
+     NOT redeploy the live site — the page just reads the new value.
      ------------------------------------------------------------
-     • The site auto-discovers your Gist by file name (no ID to configure).
-     • Until the Gist exists, it falls back to /status.json in this repo.
      • Admin preview URL (only you know it): open the site with
          #olga-2025-admin      → THIS browser always sees the site, even OFF
          #olga-2025-admin-off  → stop admin preview on this browser
      ============================================================ -->
 <script>
 (function(){
-  var GIST_USER    = "MashLanzer";       // GitHub user that owns the switch Gist
-  var GIST_FILE    = "olga-status.json"; // exact file name inside the Gist
-  var GIST_RAW_URL = "";                 // optional: paste a Gist RAW url to skip auto-discovery
-  var FALLBACK_URL = "/status.json";     // used only until the Gist exists
+  // The switch lives on the "switch" branch of this repo, in status.json.
+  var SWITCH_API   = "https://api.github.com/repos/MashLanzer/OLGA-LISSETE-LLC/contents/status.json?ref=switch";
+  var FALLBACK_URL = "/status.json";     // same-site backup copy (on the main branch)
   var ADMIN_SECRET = "olga-2025-admin";  // your secret unlock word
   var TIMEOUT_MS   = 3000;               // if the switch can't be read, show the site (fail-open)
 
@@ -74,18 +71,10 @@
   function bust(u){ return u + (u.indexOf("?")>-1?"&":"?") + "t=" + Date.now(); }
   function getJSON(u, headers){ return fetch(bust(u), {cache:"no-store", headers:headers||{}}).then(function(r){ if(!r.ok) throw 0; return r.json(); }); }
 
-  // Resolve the on/off state: Gist (raw override → auto-discovery) → repo fallback
+  // Resolve the on/off state: switch branch (via GitHub API) → same-site backup
   function readState(){
-    if(GIST_RAW_URL){ return getJSON(GIST_RAW_URL); }
-    var GH = {"Accept":"application/vnd.github+json"};
-    return getJSON("https://api.github.com/users/"+GIST_USER+"/gists?per_page=100", GH)
-      .then(function(list){
-        var g=null; for(var i=0;i<list.length;i++){ if(list[i].files && list[i].files[GIST_FILE]){ g=list[i]; break; } }
-        if(!g) throw 0;
-        return getJSON("https://api.github.com/gists/"+g.id, GH)
-          .then(function(full){ return JSON.parse(full.files[GIST_FILE].content); });
-      })
-      .catch(function(){ return getJSON(FALLBACK_URL); });  // Gist not found yet → use repo file
+    return getJSON(SWITCH_API, {"Accept":"application/vnd.github.raw"})
+      .catch(function(){ return getJSON(FALLBACK_URL); });  // API blocked/offline → backup copy
   }
 
   readState()
