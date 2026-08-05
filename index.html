@@ -9,6 +9,79 @@
 <title>Olga Lissete LLC — The Clean Touch Janitorial Services | Florida</title>
 <meta name="description" content="Professional janitorial &amp; commercial cleaning for banks, offices, dental and medical facilities, retail and commercial buildings across Florida. Licensed, insured and dependable — the clean touch you can trust.">
 
+<!-- ============================================================
+     REMOTE KILL SWITCH  (admin on/off)
+     • Turn the whole site OFF (black screen) by editing status.json:
+         { "on": false }   → site goes black for visitors
+         { "on": true  }   → site shows normally
+     • SWITCH_URL: leave as "/status.json" (same site), OR paste a GitHub
+       Gist "raw" URL to control it from another site with no redeploy.
+     • Admin preview URL (only you know it): open the site with
+         #olga-2025-admin   → THIS browser always sees the site, even when OFF
+         #olga-2025-admin-off → stop admin preview on this browser
+     ============================================================ -->
+<script>
+(function(){
+  var SWITCH_URL   = "/status.json";     // change to a Gist raw URL for off-site / instant control
+  var ADMIN_SECRET = "olga-2025-admin";  // your secret unlock word
+  var TIMEOUT_MS   = 2500;               // if the switch can't be read, show the site (fail-open)
+
+  // Build a full-screen gate immediately so no content flashes before the check.
+  var st = document.createElement("style");
+  st.textContent =
+    '#ol-gate{position:fixed;inset:0;z-index:2147483647;background:#0b2138;display:flex;'
+    +'align-items:center;justify-content:center;transition:opacity .45s ease}'
+    +'#ol-gate.ol-hide{opacity:0;pointer-events:none}'
+    +'#ol-gate.ol-black{background:#000}#ol-gate.ol-black .ol-splash{display:none}'
+    +'.ol-splash{display:flex;flex-direction:column;align-items:center;gap:16px}'
+    +'.ol-mark{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#5aa9ff,#1f74e6);'
+    +'box-shadow:0 12px 32px -8px rgba(31,116,230,.7)}'
+    +'.ol-bar{width:120px;height:3px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden;position:relative}'
+    +'.ol-bar::after{content:"";position:absolute;top:0;left:0;bottom:0;width:38%;background:#5aa9ff;border-radius:2px;animation:olbar 1s ease-in-out infinite}'
+    +'@keyframes olbar{0%{transform:translateX(-110%)}100%{transform:translateX(330%)}}'
+    +'@media(prefers-reduced-motion:reduce){.ol-bar::after{animation:none;width:100%}#ol-gate{transition:none}}';
+  document.head.appendChild(st);
+  var gate = document.createElement("div");
+  gate.id = "ol-gate";
+  gate.innerHTML = '<div class="ol-splash"><div class="ol-mark"></div><div class="ol-bar"></div></div>';
+  document.documentElement.appendChild(gate);
+
+  function reveal(){ gate.classList.add("ol-hide"); setTimeout(function(){ if(gate.parentNode) gate.parentNode.removeChild(gate); }, 550); }
+  function blackout(){ gate.classList.add("ol-black"); }   // pure black, nothing visible
+
+  // Admin unlock (per browser, remembered)
+  try{
+    if(location.hash === "#"+ADMIN_SECRET){ localStorage.setItem("ol-admin","1"); history.replaceState(null,"",location.pathname+location.search); }
+    else if(location.hash === "#"+ADMIN_SECRET+"-off"){ localStorage.removeItem("ol-admin"); history.replaceState(null,"",location.pathname+location.search); }
+  }catch(e){}
+  var isAdmin = false; try{ isAdmin = localStorage.getItem("ol-admin")==="1"; }catch(e){}
+
+  var settled = false;
+  function once(fn){ if(settled) return; settled = true; fn(); }
+  var timer = setTimeout(function(){ once(reveal); }, TIMEOUT_MS); // never leave a visitor stuck
+
+  fetch(SWITCH_URL + (SWITCH_URL.indexOf("?")>-1?"&":"?") + "t=" + Date.now(), {cache:"no-store"})
+    .then(function(r){ return r.ok ? r.json() : {on:true}; })
+    .then(function(d){
+      clearTimeout(timer);
+      var on = !(d && d.on === false);   // OFF only when explicitly {"on": false}
+      if(on){ once(reveal); }
+      else if(isAdmin){ once(function(){ reveal(); adminBadge(); }); }
+      else { once(blackout); }
+    })
+    .catch(function(){ clearTimeout(timer); once(reveal); });  // fail-open on any error
+
+  function adminBadge(){
+    var b = document.createElement("div");
+    b.textContent = "ADMIN VIEW · site is OFF for visitors";
+    b.style.cssText = "position:fixed;left:12px;bottom:12px;z-index:2147483646;background:#000;color:#5aa9ff;"
+      +"font:600 12px/1 system-ui,-apple-system,sans-serif;padding:9px 13px;border-radius:100px;border:1px solid #1f74e6;box-shadow:0 8px 24px rgba(0,0,0,.45)";
+    if(document.body){ document.body.appendChild(b); }
+    else { document.addEventListener("DOMContentLoaded", function(){ document.body.appendChild(b); }); }
+  }
+})();
+</script>
+
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Olga Lissete LLC — The Clean Touch Janitorial Services | Florida">
