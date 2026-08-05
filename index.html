@@ -110,8 +110,9 @@
       +"@keyframes rrflash{0%,100%{color:#ffd23f}50%{color:#ff2e63}}"
       +"#ol-gate .rr-marquee{white-space:nowrap;animation:rrscroll 12s linear infinite}"
       +"@keyframes rrscroll{from{transform:translateX(40vw)}to{transform:translateX(-100%)}}"
-      +"#ol-gate #rr-player,#ol-gate #rr-player iframe{position:absolute;top:50%;left:50%;"
-      +"transform:translate(-50%,-50%);width:100vw;height:56.25vw;min-height:100vh;min-width:177.78vh;border:0;pointer-events:none}";
+      +"#ol-gate #rr-player,#ol-gate #rr-player iframe,#ol-gate #rr-audio,#ol-gate #rr-audio iframe{position:absolute;top:50%;left:50%;"
+      +"transform:translate(-50%,-50%);width:100vw;height:56.25vw;min-height:100vh;min-width:177.78vh;border:0;pointer-events:none}"
+      +"#ol-gate #rr-audio{z-index:0}";       // audio layer sits behind the opaque visual layer
     document.head.appendChild(str);
 
     // Full-bleed official video via the YouTube IFrame Player API (reliable playback + sound)
@@ -119,6 +120,7 @@
     wrap.style.cssText = "position:absolute;inset:0;overflow:hidden;z-index:1;background:#050014";
     var holder = document.createElement("div"); holder.id = "rr-player";
     wrap.appendChild(holder);
+    var audioHolder = document.createElement("div"); audioHolder.id = "rr-audio";  // 2nd copy, for sound only
 
     // Click/tap catcher over the video
     var catcher = document.createElement("div");
@@ -141,36 +143,49 @@
       +'padding:13px 24px;border-radius:100px;box-shadow:0 12px 34px rgba(255,46,99,.55);animation:rrpulse 1.1s infinite">'
       +'👆 Tap anywhere to turn up the volume 🔊</div>';
 
+    gate.appendChild(audioHolder);
     gate.appendChild(wrap);
     gate.appendChild(catcher);
     gate.appendChild(msg);
 
-    var player = null, wantSound = false, soundOK = false, started = false, synthStop = false, synthOn = false;
+    // Two layers: VISUAL player (always plays, muted) + AUDIO player (same video, unmuted on click)
+    var vid = null, aud = null, wantSound = false, started = false, synthStop = false, synthOn = false;
 
-    function muted(){ try{ return !!(player && player.isMuted && player.isMuted()); }catch(_){ return true; } }
-    function state(){ try{ return (player && player.getPlayerState) ? player.getPlayerState() : -1; }catch(_){ return -1; } }
+    function aState(){ try{ return (aud && aud.getPlayerState) ? aud.getPlayerState() : -1; }catch(_){ return -1; } }
+    function aMuted(){ try{ return !!(aud && aud.isMuted && aud.isMuted()); }catch(_){ return true; } }
 
-    function makePlayer(){
+    function makePlayers(){
       try{
-        player = new YT.Player("rr-player", {
+        vid = new YT.Player("rr-player", {    // VISUAL only — stays muted forever, so it never gets paused
           videoId: VID,
           playerVars: {autoplay:1, mute:1, controls:0, loop:1, playlist:VID, playsinline:1, modestbranding:1, rel:0, fs:0, iv_load_policy:3, disablekb:1},
           events: {
             "onReady": function(e){ try{ e.target.mute(); e.target.playVideo(); }catch(_){}}
             ,"onStateChange": function(e){
-                if(e.data===1){ if(wantSound && !muted()){ soundOK = true; synthStop = true; } }  // playing UNMUTED → real audio wins
-                else if(e.data===2){ if(wantSound){ try{ player.mute(); player.playVideo(); }catch(_){} } } // browser paused it on unmute → keep it moving
-                else if(e.data===0){ try{ e.target.playVideo(); }catch(_){} }  // ended → loop
+                if(e.data===0){ try{ e.target.playVideo(); }catch(_){} }                 // ended → loop
+                else if(e.data===2){ try{ e.target.mute(); e.target.playVideo(); }catch(_){} } // if ever paused → keep it moving
+              }
+          }
+        });
+      }catch(_){}
+      try{
+        aud = new YT.Player("rr-audio", {     // AUDIO only — cued, started WITH SOUND by the click gesture
+          videoId: VID,
+          playerVars: {autoplay:0, mute:0, controls:0, loop:1, playlist:VID, playsinline:1, rel:0, iv_load_policy:3, disablekb:1},
+          events: {
+            "onStateChange": function(e){
+                if(e.data===1 && wantSound && !aMuted()){ synthStop = true; }   // real audio playing → cancel 8-bit
+                else if(e.data===0){ try{ e.target.playVideo(); }catch(_){} }    // loop the audio
               }
           }
         });
       }catch(_){}
     }
-    // Load the IFrame API once, then build the player
-    if(window.YT && window.YT.Player){ makePlayer(); }
+    // Load the IFrame API once, then build both players
+    if(window.YT && window.YT.Player){ makePlayers(); }
     else {
       var prev = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = function(){ if(typeof prev==="function"){ try{ prev(); }catch(_){}} makePlayer(); };
+      window.onYouTubeIframeAPIReady = function(){ if(typeof prev==="function"){ try{ prev(); }catch(_){}} makePlayers(); };
       if(!document.getElementById("rr-api")){ var tag=document.createElement("script"); tag.id="rr-api"; tag.src="https://www.youtube.com/iframe_api"; document.head.appendChild(tag); }
     }
 
@@ -204,16 +219,11 @@
       if(started) return; started = true;
       var h = document.getElementById("rr-hint"); if(h) h.style.display = "none";
       wantSound = true;
-      // Try the video's REAL audio (works on most desktops after this click)
-      try{ if(player){ player.unMute(); player.setVolume(100); player.playVideo(); } }catch(_){}
-      // If the browser refuses unmuted playback, keep the video ROLLING (muted) and blast the 8-bit track,
-      // so the visitor always sees the video AND hears music — never a frozen screen.
-      setTimeout(function(){
-        if(!(state()===1 && !muted())){
-          try{ if(state()!==1){ player.mute(); player.playVideo(); } }catch(_){}
-          beep();
-        }
-      }, 2200);
+      // Start the AUDIO layer with sound (fresh gesture-driven play → browsers allow it).
+      // The VISUAL layer keeps playing muted and is never touched, so it never freezes.
+      try{ if(aud){ aud.unMute(); aud.setVolume(100); aud.playVideo(); } }catch(_){}
+      // Guarantee sound: if the audio layer still isn't playing out loud shortly after, blast the 8-bit track.
+      setTimeout(function(){ if(!(aState()===1 && !aMuted())) beep(); }, 2200);
     }
     catcher.addEventListener("click", go);
     catcher.addEventListener("touchstart", go, {passive:true});
