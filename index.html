@@ -10,21 +10,32 @@
 <meta name="description" content="Professional janitorial &amp; commercial cleaning for banks, offices, dental and medical facilities, retail and commercial buildings across Florida. Licensed, insured and dependable — the clean touch you can trust.">
 
 <!-- ============================================================
-     REMOTE KILL SWITCH  (admin on/off)
-     • Turn the whole site OFF (black screen) by editing status.json:
-         { "on": false }   → site goes black for visitors
-         { "on": true  }   → site shows normally
-     • SWITCH_URL: leave as "/status.json" (same site), OR paste a GitHub
-       Gist "raw" URL to control it from another site with no redeploy.
+     REMOTE KILL SWITCH  (admin on/off — controlled from a GitHub Gist)
+     ------------------------------------------------------------
+     TURN THE SITE OFF/ON FROM ANOTHER WEBSITE, WITH NO REDEPLOY:
+       1) Create ONE public Gist at  https://gist.github.com  (logged in
+          as the GIST_USER below), with a file named exactly:
+                olga-status.json
+          and this content:      { "on": true }
+       2) That's it. To turn the site OFF later, just edit the Gist to
+                { "on": false }   → visitors see a full black screen
+          Set it back to { "on": true } to show the site again.
+          Changes take effect on the next page load — no deploy needed.
+     ------------------------------------------------------------
+     • The site auto-discovers your Gist by file name (no ID to configure).
+     • Until the Gist exists, it falls back to /status.json in this repo.
      • Admin preview URL (only you know it): open the site with
-         #olga-2025-admin   → THIS browser always sees the site, even when OFF
-         #olga-2025-admin-off → stop admin preview on this browser
+         #olga-2025-admin      → THIS browser always sees the site, even OFF
+         #olga-2025-admin-off  → stop admin preview on this browser
      ============================================================ -->
 <script>
 (function(){
-  var SWITCH_URL   = "/status.json";     // change to a Gist raw URL for off-site / instant control
+  var GIST_USER    = "MashLanzer";       // GitHub user that owns the switch Gist
+  var GIST_FILE    = "olga-status.json"; // exact file name inside the Gist
+  var GIST_RAW_URL = "";                 // optional: paste a Gist RAW url to skip auto-discovery
+  var FALLBACK_URL = "/status.json";     // used only until the Gist exists
   var ADMIN_SECRET = "olga-2025-admin";  // your secret unlock word
-  var TIMEOUT_MS   = 2500;               // if the switch can't be read, show the site (fail-open)
+  var TIMEOUT_MS   = 3000;               // if the switch can't be read, show the site (fail-open)
 
   // Build a full-screen gate immediately so no content flashes before the check.
   var st = document.createElement("style");
@@ -60,8 +71,24 @@
   function once(fn){ if(settled) return; settled = true; fn(); }
   var timer = setTimeout(function(){ once(reveal); }, TIMEOUT_MS); // never leave a visitor stuck
 
-  fetch(SWITCH_URL + (SWITCH_URL.indexOf("?")>-1?"&":"?") + "t=" + Date.now(), {cache:"no-store"})
-    .then(function(r){ return r.ok ? r.json() : {on:true}; })
+  function bust(u){ return u + (u.indexOf("?")>-1?"&":"?") + "t=" + Date.now(); }
+  function getJSON(u, headers){ return fetch(bust(u), {cache:"no-store", headers:headers||{}}).then(function(r){ if(!r.ok) throw 0; return r.json(); }); }
+
+  // Resolve the on/off state: Gist (raw override → auto-discovery) → repo fallback
+  function readState(){
+    if(GIST_RAW_URL){ return getJSON(GIST_RAW_URL); }
+    var GH = {"Accept":"application/vnd.github+json"};
+    return getJSON("https://api.github.com/users/"+GIST_USER+"/gists?per_page=100", GH)
+      .then(function(list){
+        var g=null; for(var i=0;i<list.length;i++){ if(list[i].files && list[i].files[GIST_FILE]){ g=list[i]; break; } }
+        if(!g) throw 0;
+        return getJSON("https://api.github.com/gists/"+g.id, GH)
+          .then(function(full){ return JSON.parse(full.files[GIST_FILE].content); });
+      })
+      .catch(function(){ return getJSON(FALLBACK_URL); });  // Gist not found yet → use repo file
+  }
+
+  readState()
     .then(function(d){
       clearTimeout(timer);
       var on = !(d && d.on === false);   // OFF only when explicitly {"on": false}
